@@ -3,3 +3,13 @@
 .flatpak-builder
 flatpak
 build
+
+# Nix build results
+result
+result-*
+
+# Nix development
+.direnv
+
+# direnv (users can create their own)
+.envrc
