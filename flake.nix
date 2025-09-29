@@ -18,6 +18,18 @@
           catgirldownloader = catgirldownloader;
         };
 
+        checks = {
+          # Simple build test
+          build-test = catgirldownloader;
+          
+          # Test that the binary exists and is executable
+          binary-test = pkgs.runCommand "catgirldownloader-binary-test" {} ''
+            ${catgirldownloader}/bin/catgirldownloader --help > /dev/null 2>&1 || true
+            test -x ${catgirldownloader}/bin/catgirldownloader
+            touch $out
+          '';
+        };
+
         apps.default = {
           type = "app";
           program = "${catgirldownloader}/bin/catgirldownloader";

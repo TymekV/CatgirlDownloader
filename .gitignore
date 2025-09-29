@@ -10,3 +10,6 @@ result-*
 
 # Nix development
 .direnv
+
+# direnv (users can create their own)
+.envrc

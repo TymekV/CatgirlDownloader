@@ -48,15 +48,38 @@ python3.pkgs.buildPythonApplication rec {
 
   dontWrapGApps = true;
 
+  # Ensure proper GSettings schema compilation and desktop file validation
+  postInstall = ''
+    glib-compile-schemas $out/share/glib-2.0/schemas/
+    
+    # Validate desktop file if desktop-file-utils is available
+    if command -v desktop-file-validate >/dev/null 2>&1; then
+      desktop-file-validate $out/share/applications/*.desktop
+    fi
+  '';
+
   preFixup = ''
     makeWrapperArgs+=("''${gappsWrapperArgs[@]}")
   '';
 
+  # Ensure the application can find its resources
+  postFixup = ''
+    wrapProgram $out/bin/catgirldownloader \
+      --prefix PATH : ${lib.makeBinPath [ glib ]} \
+      --prefix GI_TYPELIB_PATH : "$GI_TYPELIB_PATH"
+  '';
+
   meta = with lib; {
     description = "A GTK4 application that downloads images of catgirl based on nekos.moe";
+    longDescription = ''
+      CatgirlDownloader is a GTK4 application that provides a simple interface
+      for downloading catgirl images from the nekos.moe API. It features a modern
+      libadwaita interface with support for NSFW filtering preferences.
+    '';
     homepage = "https://github.com/TymekV/CatgirlDownloader";
     license = licenses.gpl3Plus;
-    maintainers = [ ];
+    maintainers = with maintainers; [ ]; # Add maintainer here when upstreaming
     platforms = platforms.linux;
+    mainProgram = "catgirldownloader";
   };
 }

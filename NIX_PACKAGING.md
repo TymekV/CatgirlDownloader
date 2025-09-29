@@ -81,6 +81,10 @@ nix develop
 
 # Using shell.nix
 nix-shell
+
+# Or with direnv for automatic shell switching
+echo "use flake" > .envrc
+direnv allow
 ```
 
 ### Build from Source
